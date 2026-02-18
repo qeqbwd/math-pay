@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>IMO 支付测试</title>
+</head>
+<body>
+<h2>支付系统测试</h2>
+
+<button onclick="register()">注册 test</button>
+<button onclick="createPay()">创建支付</button>
+
+<div id="qr"></div>
+
+<script>
+async function api(url, options={}) {
+  return fetch(url, {
+    credentials: "include",
+    headers: { "Content-Type": "application/json" },
+    ...options
+  }).then(r => r.json());
+}
+
+async function register() {
+  await api("/api/auth/register", {
+    method: "POST",
+    body: JSON.stringify({ username: "test", password: "1234" })
+  });
+  alert("已注册并登录 test");
+}
+
+async function createPay() {
+  const r = await api("/api/pay/create", {
+    method: "POST",
+    body: JSON.stringify({ problemNum: "1" })
+  });
+  document.getElementById("qr").innerHTML =
+    '<img src="'+r.qrImgUrl+'" width="200">';
+}
+</script>
+
+</body>
+</html>
